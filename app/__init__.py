@@ -45,6 +45,6 @@ def create_app(config):
     app.config.from_object(config)
     register_extensions(app)
     configure_database(app)
-    app.register_blueprint(AuthenRoute("auth", __name__))
+    app.register_blueprint(AuthenRoute("auth", __name__), url_prefix="/auth")
 
     return app

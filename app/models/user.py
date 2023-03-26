@@ -19,5 +19,6 @@ class User(CRUDMixin, SurrogatePK, db.Model, RedisModel):
         self.registered_on = datetime.now()
         self.admin = admin
 
-    def get_by_email(self, email):
-        return self.query.filter_by(email=email).first()
+    @classmethod
+    def get_by_email(cls, email):
+        return cls.query.filter_by(email=email).first()

@@ -7,7 +7,7 @@ class AuthenService:
     @staticmethod
     def register(data):
         email = data.get("email")
-        exist_user = User.get_by_email(email)
+        exist_user = User.get_by_email(email=email)
         password = data.get("password")
         if exist_user:
             return jsonify(message='That email already exists'), 409

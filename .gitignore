@@ -29,3 +29,6 @@ db.sqlite
 
 # Mac files
 .DS_Store
+
+# database files
+*.sqlite3

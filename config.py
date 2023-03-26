@@ -3,7 +3,9 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-import os, random, string
+import os
+import random
+import string
 
 
 class Config(object):
