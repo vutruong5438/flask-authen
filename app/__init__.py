@@ -6,8 +6,9 @@ Copyright (c) 2019 - present AppSeed.us
 import os
 
 from flask import Flask
-from .extensions import db, bcrypt, migrate
-from app.routes import AuthenRoute
+from .extensions import db, bcrypt, migrate, jwt
+from app.routes import AuthRoute
+from app.routes.auth import auth_blueprint
 
 from importlib import import_module
 
@@ -16,7 +17,7 @@ def register_extensions(app):
     db.init_app(app)
     migrate.init_app(app, db)
     bcrypt.init_app(app)
-
+    jwt.init_app(app)
 
 def configure_database(app):
     @app.before_first_request
@@ -45,6 +46,7 @@ def create_app(config):
     app.config.from_object(config)
     register_extensions(app)
     configure_database(app)
-    app.register_blueprint(AuthenRoute("auth", __name__), url_prefix="/auth")
+    app.register_blueprint(AuthRoute("auth", "/auth").bp)
+    # app.register_blueprint(auth_blueprint, url_prefix="/auth")
 
     return app

@@ -1,5 +1,6 @@
 flask==2.0.2
 Werkzeug==2.0.3
+psycopg2-binary
 jinja2==3.0.2
 flask_migrate==3.1.0
 flask_sqlalchemy==2.5.1
@@ -9,3 +10,4 @@ gunicorn==20.1.0
 python-dotenv==0.19.2
 Flask-Bcrypt==0.7.1
 redis
+Flask-JWT-Extended

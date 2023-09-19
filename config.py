@@ -3,37 +3,29 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-import os
-import random
-import string
+import os, random, string
 
 
 class Config(object):
     basedir = os.path.abspath(os.path.dirname(__file__))
 
     # Set up the App SECRET_KEY
-    SECRET_KEY = os.getenv('SECRET_KEY', None)
+    SECRET_KEY = os.getenv('SECRET_KEY', "you-will-never-know")
     if not SECRET_KEY:
         SECRET_KEY = ''.join(random.choice(string.ascii_lowercase) for i in range(32))
 
-    # Social AUTH context
-    SOCIAL_AUTH_GITHUB = False
-
-    GITHUB_ID = os.getenv('GITHUB_ID', None)
-    GITHUB_SECRET = os.getenv('GITHUB_SECRET', None)
-
-    # Enable/Disable Github Social Login
-    if GITHUB_ID and GITHUB_SECRET:
-        SOCIAL_AUTH_GITHUB = True
+    # Set up JWT config
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', "you-will-never-know")
+    JWT_REFRESH_TOKEN_EXPIRES = os.getenv('JWT_REFRESH_TOKEN_EXPIRES', 60 * 60)
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    DB_ENGINE = os.getenv('DB_ENGINE', None)
-    DB_USERNAME = os.getenv('DB_USERNAME', None)
-    DB_PASS = os.getenv('DB_PASS', None)
-    DB_HOST = os.getenv('DB_HOST', None)
-    DB_PORT = os.getenv('DB_PORT', None)
-    DB_NAME = os.getenv('DB_NAME', None)
+    DB_ENGINE = os.getenv('DB_ENGINE', "postgresql")
+    DB_USERNAME = os.getenv('DB_USERNAME', "odoo")
+    DB_PASS = os.getenv('DB_PASS', "odoo")
+    DB_HOST = os.getenv('DB_HOST', "localhost")
+    DB_PORT = os.getenv('DB_PORT', 5432)
+    DB_NAME = os.getenv('DB_NAME', "flask_authen")
 
     USE_SQLITE = False
 
@@ -52,11 +44,6 @@ class Config(object):
             USE_SQLITE = False
         except Exception as e:
             print('> Error: DBMS Exception: ' + str(e))
-            print('> Fallback to SQLite ')
-
-    if USE_SQLITE:
-        # This will create a file in <app> FOLDER
-        SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db.sqlite3')
 
 
 class DevelopmentConfig(Config):
@@ -67,11 +54,6 @@ class DevelopmentConfig(Config):
 
 class ProductionConfig(Config):
     DEBUG = False
-
-    # Security
-    SESSION_COOKIE_HTTPONLY = True
-    REMEMBER_COOKIE_HTTPONLY = True
-    REMEMBER_COOKIE_DURATION = 3600
 
 
 # Load all possible configurations

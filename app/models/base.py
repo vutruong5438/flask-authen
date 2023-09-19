@@ -45,6 +45,9 @@ class SurrogatePK(object):
         """Get record by ID."""
         return cls.query.get(int(record_id))
 
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
 
 class TimestampMixin:
     created_at = db.Column(db.DateTime, default=datetime.now())

@@ -12,6 +12,7 @@ class User(CRUDMixin, SurrogatePK, db.Model, RedisModel):
     admin = db.Column(db.Boolean, nullable=False, default=False)
     public_id = db.Column(db.String(100), unique=True)
     password_hash = db.Column(db.String(100))
+    profile = db.relationship("UserProfile", backref="user",  uselist=False)
 
     def __init__(self, email, password, admin=False):
         self.email = email
@@ -22,3 +23,13 @@ class User(CRUDMixin, SurrogatePK, db.Model, RedisModel):
     @classmethod
     def get_by_email(cls, email):
         return cls.query.filter_by(email=email).first()
+
+    @classmethod
+    def load(cls, id):
+        return User.query.get(id)
+
+    @staticmethod
+    def check_password_hash(password_hash, password):
+        return bcrypt.check_password_hash(password_hash, password)
+
+

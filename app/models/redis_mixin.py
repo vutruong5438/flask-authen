@@ -2,6 +2,7 @@ import os
 import pickle
 import redis
 
+
 class RedisModel:
     def __init__(self, redis_url=None):
         if redis_url is None:

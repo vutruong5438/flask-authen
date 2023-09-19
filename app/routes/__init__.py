@@ -1,1 +1,1 @@
-from .auth import AuthenRoute
+from .auth import AuthRoute
