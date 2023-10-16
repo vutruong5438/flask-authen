@@ -7,7 +7,7 @@ import os
 
 from flask import Flask
 from .extensions import db, bcrypt, migrate, jwt
-from app.routes import AuthRoute
+from app.routes import AuthRoute, ProductRoute
 from app.routes.auth import auth_blueprint
 
 from importlib import import_module
@@ -19,22 +19,14 @@ def register_extensions(app):
     bcrypt.init_app(app)
     jwt.init_app(app)
 
+
 def configure_database(app):
     @app.before_first_request
     def initialize_database():
         try:
             db.create_all()
         except Exception as e:
-
             print('> Error: DBMS Exception: ' + str(e))
-
-            # fallback to SQLite
-            basedir = os.path.abspath(os.path.dirname(__file__))
-            app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir,
-                                                                                                          'db.sqlite3')
-
-            print('> Fallback to SQLite ')
-            db.create_all()
 
     @app.teardown_request
     def shutdown_session(exception=None):
@@ -47,6 +39,6 @@ def create_app(config):
     register_extensions(app)
     configure_database(app)
     app.register_blueprint(AuthRoute("auth", "/auth").bp)
-    # app.register_blueprint(auth_blueprint, url_prefix="/auth")
+    app.register_blueprint(ProductRoute("product", "/products").bp)
 
     return app

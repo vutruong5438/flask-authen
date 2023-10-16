@@ -12,3 +12,5 @@ class UserService:
         profile.user_id = user.id
         profile.save()
         return user
+
+

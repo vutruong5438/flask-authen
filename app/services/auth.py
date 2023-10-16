@@ -1,7 +1,8 @@
 from flask import jsonify
 from app.models import User, UserProfile
-from app.services import UserService
-from flask_jwt_extended import create_access_token, jwt_required
+from app.services.user_profile import UserProfileService
+from app.services.user import UserService
+from flask_jwt_extended import create_access_token
 
 
 class AuthService:
@@ -14,14 +15,13 @@ class AuthService:
         """
 
         payload = {
-            "id": user_id
+            'id': user_id
         }
         return create_access_token(payload)
 
     @classmethod
     def register(cls, data):
         email = data.get("email")
-        password = data.get("password")
         exist_user = User.get_by_email(email)
         if exist_user:
             return jsonify(message='That email already exists'), 409
@@ -45,3 +45,7 @@ class AuthService:
     def profile(cls, pk):
         profile = UserProfile.get_by_user_id(pk)
         return profile.as_dict()
+
+    @classmethod
+    def update_profile(cls, pk, data):
+        return UserProfileService.update_profile(pk, data)

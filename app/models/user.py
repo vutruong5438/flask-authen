@@ -1,10 +1,10 @@
-from .base import CRUDMixin, SurrogatePK, TimestampMixin
+from .base import CRUDMixin, TimestampMixin
 from .redis_mixin import RedisModel
 from app.extensions import db, bcrypt
 from datetime import datetime
 
 
-class User(CRUDMixin, SurrogatePK, db.Model, RedisModel):
+class User(db.Model, RedisModel):
     __tablename__ = "users"
 
     email = db.Column(db.String(255), unique=True, nullable=False)

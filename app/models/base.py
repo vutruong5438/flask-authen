@@ -1,10 +1,11 @@
 from datetime import datetime
 from app.extensions import db
-from flask_sqlalchemy import Model
 
 
-class CRUDMixin(Model):
-    """Mixin that adds convenience methods for CRUD (create, read, update, delete) operations."""
+class CRUDMixin(object):
+    __table_args__ = {'extend_existing': True}
+
+    id = db.Column(db.Integer, primary_key=True)
 
     @classmethod
     def create(cls, **kwargs):
@@ -30,25 +31,29 @@ class CRUDMixin(Model):
         db.session.delete(self)
         return commit and db.session.commit()
 
-
-class SurrogatePK(object):
-    """A mixin that adds a surrogate integer 'primary key' column named ``id`` \
-        to any declarative-mapped class.
-    """
-
-    __table_args__ = {'extend_existing': True}
-
-    id = db.Column(db.Integer, primary_key=True)
-
     @classmethod
-    def get_by_id(cls, record_id):
-        """Get record by ID."""
-        return cls.query.get(int(record_id))
+    def get_by_id(cls, id):
+        if any(
+            (isinstance(id, str) and id.isdigit(),
+             isinstance(id, (int, float))),
+        ):
+            return cls.query.get(int(id))
+        return None
 
-    def as_dict(self):
+    def as_dict(self, fields=[]):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 
-class TimestampMixin:
+class TimestampMixin(CRUDMixin):
     created_at = db.Column(db.DateTime, default=datetime.now())
     updated_at = db.Column(db.DateTime, default=datetime.now())
+
+    def save(self, commit=True):
+        self.created_at = datetime.now()
+        res = super().save(commit=True)
+        return res
+
+    def update(self, commit=True, **kwargs):
+        self.updated_at = datetime.now()
+        res = super().update(commit=True, **kwargs)
+        return res

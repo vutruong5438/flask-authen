@@ -1,10 +1,9 @@
-from .base import CRUDMixin, SurrogatePK, TimestampMixin
+from .base import CRUDMixin, TimestampMixin
 from .redis_mixin import RedisModel
 from app.extensions import db
-from flask_sqlalchemy import Model
 
 
-class UserProfile(db.Model, CRUDMixin, SurrogatePK, RedisModel):
+class UserProfile(db.Model, RedisModel):
     __tablename__ = "user_profiles"
 
     first_name = db.Column(db.String(50), )

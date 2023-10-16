@@ -16,13 +16,13 @@ class Config(object):
 
     # Set up JWT config
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', "you-will-never-know")
-    JWT_REFRESH_TOKEN_EXPIRES = os.getenv('JWT_REFRESH_TOKEN_EXPIRES', 60 * 60)
+    JWT_REFRESH_TOKEN_EXPIRES = os.getenv('JWT_REFRESH_TOKEN_EXPIRES', 60*60)
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     DB_ENGINE = os.getenv('DB_ENGINE', "postgresql")
-    DB_USERNAME = os.getenv('DB_USERNAME', "odoo")
-    DB_PASS = os.getenv('DB_PASS', "odoo")
+    DB_USERNAME = os.getenv('DB_USERNAME', "vutruong")
+    DB_PASS = os.getenv('DB_PASS', "")
     DB_HOST = os.getenv('DB_HOST', "localhost")
     DB_PORT = os.getenv('DB_PORT', 5432)
     DB_NAME = os.getenv('DB_NAME', "flask_authen")
@@ -44,6 +44,11 @@ class Config(object):
             USE_SQLITE = False
         except Exception as e:
             print('> Error: DBMS Exception: ' + str(e))
+            print('> Fallback to SQLite ')
+
+    if USE_SQLITE:
+        # This will create a file in <app> FOLDER
+        SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db.sqlite3')
 
 
 class DevelopmentConfig(Config):
