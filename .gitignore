@@ -32,3 +32,6 @@ db.sqlite
 
 # database files
 *.sqlite3
+
+# migrations files
+migrations
