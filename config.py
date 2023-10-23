@@ -16,9 +16,9 @@ class Config(object):
 
     # Set up JWT config
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', "you-will-never-know")
-    JWT_REFRESH_TOKEN_EXPIRES = os.getenv('JWT_REFRESH_TOKEN_EXPIRES', 60*60)
+    JWT_REFRESH_TOKEN_EXPIRES = os.getenv('JWT_REFRESH_TOKEN_EXPIRES', 60 * 60)
 
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
 
     DB_ENGINE = os.getenv('DB_ENGINE', "postgresql")
     DB_USERNAME = os.getenv('DB_USERNAME', "vutruong")
@@ -27,28 +27,14 @@ class Config(object):
     DB_PORT = os.getenv('DB_PORT', 5432)
     DB_NAME = os.getenv('DB_NAME', "flask_authen")
 
-    USE_SQLITE = False
-
-    # try to set up a Relational DBMS
-    if DB_ENGINE and DB_NAME and DB_USERNAME:
-        try:
-            # Relational DBMS: PSQL, MySql
-            SQLALCHEMY_DATABASE_URI = '{}://{}:{}@{}:{}/{}'.format(
-                DB_ENGINE,
-                DB_USERNAME,
-                DB_PASS,
-                DB_HOST,
-                DB_PORT,
-                DB_NAME
-            )
-            USE_SQLITE = False
-        except Exception as e:
-            print('> Error: DBMS Exception: ' + str(e))
-            print('> Fallback to SQLite ')
-
-    if USE_SQLITE:
-        # This will create a file in <app> FOLDER
-        SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db.sqlite3')
+    SQLALCHEMY_DATABASE_URI = '{}://{}:{}@{}:{}/{}'.format(
+        DB_ENGINE,
+        DB_USERNAME,
+        DB_PASS,
+        DB_HOST,
+        DB_PORT,
+        DB_NAME
+    )
 
 
 class DevelopmentConfig(Config):

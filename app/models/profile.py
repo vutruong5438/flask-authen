@@ -6,8 +6,9 @@ from app.extensions import db
 class UserProfile(db.Model, RedisModel):
     __tablename__ = "user_profiles"
 
-    first_name = db.Column(db.String(50), )
-    last_name = db.Column(db.String(50), )
+    first_name = db.Column(db.String(50))
+    last_name = db.Column(db.String(50))
+    phone_number = db.Column(db.String(50))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
     @classmethod

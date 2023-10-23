@@ -9,8 +9,7 @@ from flask import Flask
 from .extensions import db, bcrypt, migrate, jwt
 from app.routes import AuthRoute, ProductRoute
 from app.routes.auth import auth_blueprint
-
-from importlib import import_module
+from config import config_dict
 
 
 def register_extensions(app):
@@ -33,11 +32,16 @@ def configure_database(app):
         db.session.remove()
 
 
-def create_app(config):
+def create_app():
+    DEBUG = (os.getenv('DEBUG', 'False') == 'True')
+    # The configuration
+    get_config_mode = 'development' if DEBUG else 'production'
+    config = config_dict[get_config_mode]
+
     app = Flask(__name__)
     app.config.from_object(config)
     register_extensions(app)
-    configure_database(app)
+    # configure_database(app)
     app.register_blueprint(AuthRoute("auth", "/auth").bp)
     app.register_blueprint(ProductRoute("product", "/products").bp)
 
