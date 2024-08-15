@@ -10,3 +10,4 @@ python-dotenv==0.19.2
 Flask-Bcrypt==1.0.1
 redis
 Flask-JWT-Extended
+flask_cors

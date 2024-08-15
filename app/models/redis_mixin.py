@@ -24,10 +24,13 @@ class RedisModel(CRUDMixin):
 
     @classmethod
     def load(cls, pk):
-        value = cls.cache_get(pk)
-        if not value:
+        try:
+            value = cls.cache_get(pk)
+            if not value:
+                value = cls.get_by_id(pk)
+                cls.cache_set(pk, value)
+        except Exception as e:
             value = cls.get_by_id(pk)
-            cls.cache_set(pk, value)
         return value
 
     @classmethod

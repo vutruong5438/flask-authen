@@ -8,6 +8,14 @@ class ProductRoute(Blueprint):
         self.url_prefix = url_prefix
         self.bp = Blueprint(self.name, __name__, url_prefix=self.url_prefix)
 
+        @self.bp.route("/", methods=["GET"])
+        def list():
+            products_data = []
+            products = ProductService.list()
+            for product in products:
+                products_data.append(product.as_dict())
+            return jsonify(products_data)
+
         @self.bp.route("/", methods=["POST"])
         def create():
             data = request.json
@@ -25,10 +33,7 @@ class ProductRoute(Blueprint):
             product = ProductService.update(product_id, **data)
             return product.as_dict()
 
-        @self.bp.route("/", methods=["GET"])
-        def list():
-            products_data = []
-            products = ProductService.list()
-            for product in products:
-                products_data.append(product.as_dict())
-            return jsonify(products_data)
+        @self.bp.route("/<product_id>", methods=["DELETE"])
+        def delete(product_id):
+            deleted = ProductService.delete(product_id)
+            return deleted

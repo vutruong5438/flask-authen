@@ -41,7 +41,9 @@ class CRUDMixin(object):
         return None
 
     def as_dict(self, fields=[]):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        if not fields:
+            fields = [col.name for col in self.__table__.columns]
+        return {field: getattr(self, field) for field in fields}
 
 
 class TimestampMixin(CRUDMixin):

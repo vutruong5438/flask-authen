@@ -14,6 +14,7 @@ class Product(db.Model, TimestampMixin, RedisModel):
     active = db.Column(db.Boolean, default=True)
     category = db.Column(db.String(255))
 
-    def __init__(self, name, code):
-        self.name = name
-        self.code = code
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            if hasattr(self, key):
+                setattr(self, key, value)

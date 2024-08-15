@@ -6,9 +6,8 @@ Copyright (c) 2019 - present AppSeed.us
 import os
 
 from flask import Flask
-from .extensions import db, bcrypt, migrate, jwt
-from app.routes import AuthRoute, ProductRoute
-from app.routes.auth import auth_blueprint
+from .extensions import db, bcrypt, migrate, jwt, cors
+from app.routes import AuthRoute, ProductRoute, HealthCheck, products_blueprint
 from config import config_dict
 
 
@@ -17,6 +16,7 @@ def register_extensions(app):
     migrate.init_app(app, db)
     bcrypt.init_app(app)
     jwt.init_app(app)
+    cors.init_app(app=app, resources={r'/*': {"origins": ["http://localhost:5173"]}})
 
 
 def configure_database(app):
@@ -42,7 +42,9 @@ def create_app():
     app.config.from_object(config)
     register_extensions(app)
     # configure_database(app)
+    app.register_blueprint(HealthCheck("healthcheck", "/").bp)
     app.register_blueprint(AuthRoute("auth", "/auth").bp)
-    app.register_blueprint(ProductRoute("product", "/products").bp)
-
+    app.register_blueprint(products_blueprint)
+    # app.register_blueprint(ProductRoute("product", "/products").bp)
     return app
+

@@ -28,3 +28,12 @@ class ProductService:
     def load(cls, pk):
         product = Product.load(pk)
         return product
+
+    @classmethod
+    def delete(cls, pk):
+        try:
+            product = Product.get_by_id(pk)
+            product.delete()
+            return True
+        except Exception as e:
+            raise e

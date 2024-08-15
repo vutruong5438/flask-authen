@@ -8,14 +8,16 @@ from flask_jwt_extended import create_access_token
 class AuthService:
 
     @staticmethod
-    def encode_auth_token(user_id):
+    def encode_auth_token(user):
         """
         Generates the Auth Token
         :return: string
         """
 
         payload = {
-            'id': user_id
+            "id": user.id,
+            "email": user.email
+
         }
         return create_access_token(payload)
 
@@ -26,7 +28,7 @@ class AuthService:
         if exist_user:
             return jsonify(message='That email already exists'), 409
         try:
-            user = UserService.create_user(data)
+            user = UserService.create_user(**data)
         except Exception as e:
             return jsonify(message=e), 409
         return {'user_id': user.id}
@@ -37,7 +39,7 @@ class AuthService:
         password = data.get("password")
         exist_user = User.get_by_email(email)
         if exist_user and exist_user.check_password_hash(exist_user.password_hash, password):
-            return {"token": cls.encode_auth_token(exist_user.id)}
+            return {"token": cls.encode_auth_token(exist_user)}
         else:
             return jsonify(message='Try again'), 500
 
